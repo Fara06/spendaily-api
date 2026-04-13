@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Validation\Rule;
 
 class TransactionController extends Controller
 {
@@ -81,11 +82,19 @@ class TransactionController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'type'             => 'required|in:income,expense',
-            'category_id'      => 'required|exists:categories,id',
-            'amount'           => 'required|numeric|min:0',
+            'type' => 'required|in:income,expense',
+            'category_id' => [
+                'required',
+                Rule::exists('categories', 'id')->where(function ($query) use ($request) {
+                    $query->where(function ($q) use ($request) {
+                        $q->where('user_id', $request->user()->id)
+                            ->orWhere('is_default', true);
+                    });
+                }),
+            ],
+            'amount' => 'required|numeric|min:0',
             'transaction_time' => 'required|date',
-            'source'           => 'nullable|in:manual,reminder,import',
+            'source' => 'nullable|in:manual,reminder,import',
         ]);
 
         $transaction = Transaction::create([
@@ -107,26 +116,6 @@ class TransactionController extends Controller
         return response()->json($transaction);
     }
 
-    // // PUT /transactions/{transaction}
-    // public function update(Request $request, Transaction $transaction)
-    // {
-    //     if ($transaction->user_id !== $request->user()->id) {
-    //         return response()->json(['message' => 'Forbidden'], 403);
-    //     }
-
-    //     $validated = $request->validate([
-    //         'type'             => 'sometimes|in:income,expense',
-    //         'category'         => 'sometimes|string|max:255',
-    //         'amount'           => 'sometimes|numeric|min:0',
-    //         'transaction_time' => 'sometimes|date',
-    //         'source'           => 'nullable|in:manual,reminder,import',
-    //     ]);
-
-    //     $transaction->update($validated);
-
-    //     return response()->json($transaction);
-    // }
-
     // DELETE /transactions/{transaction}
     public function destroy(Request $request, Transaction $transaction)
     {
@@ -137,5 +126,25 @@ class TransactionController extends Controller
         $transaction->delete();
 
         return response()->json(['message' => 'Transaction deleted']);
+    }
+
+    public function streak(Request $request)
+    {
+        $userId = $request->user()->id;
+        $streak = 0;
+        $date = now()->startOfDay();
+
+        while (true) {
+            $hasTransaction = \App\Models\Transaction::where('user_id', $userId)
+                ->whereDate('transaction_time', $date)
+                ->exists();
+
+            if (!$hasTransaction) break;
+
+            $streak++;
+            $date->subDay();
+        }
+
+        return response()->json(['streak' => $streak]);
     }
 }

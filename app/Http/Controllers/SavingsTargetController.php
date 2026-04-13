@@ -8,15 +8,10 @@ use Illuminate\Http\Request;
 class SavingsTargetController extends Controller
 {
     // GET /savings-target
-    public function show(Request $request)
+    public function index(Request $request)
     {
-        $target = SavingsTarget::where('user_id', $request->user()->id)->first();
-
-        if (!$target) {
-            return response()->json(['message' => 'Savings target not found'], 404);
-        }
-
-        return response()->json($target);
+        $targets = SavingsTarget::where('user_id', $request->user()->id)->get();
+        return response()->json($targets);
     }
 
     // POST /savings-target
@@ -29,22 +24,20 @@ class SavingsTargetController extends Controller
             'end_date'      => 'required|date|after:start_date',
         ]);
 
-        $target = SavingsTarget::updateOrCreate(
-            ['user_id' => $request->user()->id],
-            $validated
-        );
+        $target = SavingsTarget::create([
+            ...$validated,
+            'user_id' => $request->user()->id,
+        ]);
 
         return response()->json($target, 201);
     }
 
-    // PUT /savings-target
-    public function update(Request $request)
+    // PUT /savings-target/{id}
+    public function update(Request $request, $id)
     {
-        $target = SavingsTarget::where('user_id', $request->user()->id)->first();
-
-        if (!$target) {
-            return response()->json(['message' => 'Savings target not found'], 404);
-        }
+        $target = SavingsTarget::where('id', $id)
+            ->where('user_id', $request->user()->id)
+            ->firstOrFail();
 
         $validated = $request->validate([
             'target_amount' => 'sometimes|numeric|min:0',
@@ -58,14 +51,12 @@ class SavingsTargetController extends Controller
         return response()->json($target);
     }
 
-    // DELETE /savings-target
-    public function destroy(Request $request)
+    // DELETE /savings-target/{id}
+    public function destroy(Request $request, $id)
     {
-        $target = SavingsTarget::where('user_id', $request->user()->id)->first();
-
-        if (!$target) {
-            return response()->json(['message' => 'Savings target not found'], 404);
-        }
+        $target = SavingsTarget::where('id', $id)
+            ->where('user_id', $request->user()->id)
+            ->firstOrFail();
 
         $target->delete();
 

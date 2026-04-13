@@ -25,8 +25,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/categories', [CategoryController::class, 'store']);
     Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 
-    // Transactions
-    // Transactions
+    // Transactions — urutan PENTING! streak & summary harus di atas {transaction}
+    Route::get('/transactions/streak', [TransactionController::class, 'streak']);
     Route::get('/transactions/summary', [TransactionController::class, 'summary']);
     Route::get('/transactions', [TransactionController::class, 'index']);
     Route::post('/transactions', [TransactionController::class, 'store']);
@@ -35,10 +35,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/transactions/{transaction}', [TransactionController::class, 'destroy']);
 
     // Savings Target
-    Route::get('/savings-target', [SavingsTargetController::class, 'show']);
+    Route::get('/savings-target', [SavingsTargetController::class, 'index']);
     Route::post('/savings-target', [SavingsTargetController::class, 'store']);
-    Route::put('/savings-target', [SavingsTargetController::class, 'update']);
-    Route::delete('/savings-target', [SavingsTargetController::class, 'destroy']);
+    Route::put('/savings-target/{id}', [SavingsTargetController::class, 'update']);
+    Route::delete('/savings-target/{id}', [SavingsTargetController::class, 'destroy']);
 
     // Habits
     Route::get('/habits', [HabitController::class, 'index']);
