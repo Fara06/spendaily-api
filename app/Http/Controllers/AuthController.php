@@ -12,7 +12,7 @@ class AuthController extends Controller
     // Redirect ke Google
     public function redirectToGoogle()
     {
-        return Socialite::driver('google')->redirect();
+        $googleUser = Socialite::driver('google')->user();
     }
 
     // Callback Google

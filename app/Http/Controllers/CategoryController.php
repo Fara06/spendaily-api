@@ -7,17 +7,12 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    // GET /categories - ambil kategori default + milik user
     public function index(Request $request)
     {
-        $categories = Category::where('is_default', true)
-            ->orWhere('user_id', $request->user()->id)
-            ->get();
-
+        $categories = Category::whereNull('user_id')->get();
         return response()->json($categories);
     }
 
-    // POST /categories - buat kategori custom
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -35,7 +30,6 @@ class CategoryController extends Controller
         return response()->json($category, 201);
     }
 
-    // DELETE /categories/{id} - hapus kategori milik user (tidak bisa hapus default)
     public function destroy(Request $request, $id)
     {
         $category = Category::where('id', $id)
