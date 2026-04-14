@@ -56,11 +56,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/reminders/{id}/toggle', [ReminderController::class, 'toggle']);
 
     // Missions — static routes HARUS di atas /{id}
+    Route::get('/missions', [MissionController::class, 'index']);
     Route::get('/missions/featured', [MissionController::class, 'featured']);
     Route::get('/missions/recommended', [MissionController::class, 'recommended']);
     Route::get('/missions/active', [MissionController::class, 'active']);
     Route::get('/missions/summary', [MissionController::class, 'summary']);
-    Route::get('/missions', [MissionController::class, 'index']);
     Route::get('/missions/{id}', [MissionController::class, 'show']);
     Route::post('/missions/start', [MissionController::class, 'start']);
     Route::post('/missions/claim', [MissionController::class, 'claim']);
