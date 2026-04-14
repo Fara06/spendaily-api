@@ -14,7 +14,6 @@ class SavingsTarget extends Model
         'daily_limit',
         'start_date',
         'end_date',
-        'is_active'
     ];
 
     protected $casts = [
