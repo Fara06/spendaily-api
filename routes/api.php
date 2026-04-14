@@ -35,10 +35,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/transactions/{transaction}', [TransactionController::class, 'destroy']);
 
     // Savings Target
-    Route::get('/savings-target', [SavingsTargetController::class, 'index']);
-    Route::post('/savings-target', [SavingsTargetController::class, 'store']);
-    Route::put('/savings-target/{id}', [SavingsTargetController::class, 'update']);
-    Route::delete('/savings-target/{id}', [SavingsTargetController::class, 'destroy']);
+    Route::get('/savings-targets', [SavingsTargetController::class, 'index']);
+    Route::get('/savings-targets/active', [SavingsTargetController::class, 'active']);
+    Route::post('/savings-targets', [SavingsTargetController::class, 'store']);
+    Route::put('/savings-targets/{id}', [SavingsTargetController::class, 'update']);
+    Route::delete('/savings-targets/{id}', [SavingsTargetController::class, 'destroy']);
+    Route::post('/savings-targets/{id}/add-progress', [SavingsTargetController::class, 'addProgress']);
 
     // Habits
     Route::get('/habits', [HabitController::class, 'index']);

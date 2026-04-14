@@ -8,10 +8,13 @@ class SavingsTarget extends Model
 {
     protected $fillable = [
         'user_id',
+        'title',
         'target_amount',
+        'current_amount',
         'daily_limit',
         'start_date',
         'end_date',
+        'is_active'
     ];
 
     protected $casts = [

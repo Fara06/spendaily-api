@@ -14,10 +14,13 @@ return new class extends Migration
         Schema::create('savings_targets', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->integer('target_amount'); // target tabungan
-            $table->integer('daily_limit'); // batas pengeluaran harian
+            $table->string('title');
+            $table->integer('target_amount');
+            $table->integer('current_amount')->default(0);
+            $table->integer('daily_limit')->nullable();
             $table->date('start_date');
             $table->date('end_date');
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }
