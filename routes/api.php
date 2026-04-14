@@ -8,8 +8,8 @@ use App\Http\Controllers\ReminderController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\SavingsTargetController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\MissionController;
-use App\Http\Controllers\UserMissionController;
+use App\Http\Controllers\MissionsController;
+use App\Http\Controllers\UserMissionsController;
 
 // Public routes
 Route::post('/auth/register', [AuthController::class, 'register']);
@@ -56,21 +56,21 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/reminders/{id}/toggle', [ReminderController::class, 'toggle']);
 
     // Missions — static routes HARUS di atas /{id}
-    Route::get('/missions', [MissionController::class, 'index']);
-    Route::get('/missions/featured', [MissionController::class, 'featured']);
-    Route::get('/missions/recommended', [MissionController::class, 'recommended']);
-    Route::get('/missions/active', [MissionController::class, 'active']);
-    Route::get('/missions/summary', [MissionController::class, 'summary']);
-    Route::get('/missions/{id}', [MissionController::class, 'show']);
-    Route::post('/missions/start', [MissionController::class, 'start']);
-    Route::post('/missions/claim', [MissionController::class, 'claim']);
-    Route::post('/missions/give-up', [MissionController::class, 'giveUp']);
+    Route::get('/missions', [MissionsController::class, 'index']);
+    Route::get('/missions/featured', [MissionsController::class, 'featured']);
+    Route::get('/missions/recommended', [MissionsController::class, 'recommended']);
+    Route::get('/missions/active', [MissionsController::class, 'active']);
+    Route::get('/missions/summary', [MissionsController::class, 'summary']);
+    Route::get('/missions/{id}', [MissionsController::class, 'show']);
+    Route::post('/missions/start', [MissionsController::class, 'start']);
+    Route::post('/missions/claim', [MissionsController::class, 'claim']);
+    Route::post('/missions/give-up', [MissionsController::class, 'giveUp']);
 
     // User Missions — static routes HARUS di atas /{id}
-    Route::get('/user-missions/active', [UserMissionController::class, 'active']);
-    Route::get('/user-missions', [UserMissionController::class, 'index']);
-    Route::post('/user-missions/start', [UserMissionController::class, 'start']);
-    Route::patch('/user-missions/{id}/progress', [UserMissionController::class, 'updateProgress']);
-    Route::patch('/user-missions/{id}/give-up', [UserMissionController::class, 'giveUp']);
-    Route::post('/user-missions/{id}/claim', [UserMissionController::class, 'claim']);
+    Route::get('/user-missions/active', [UserMissionsController::class, 'active']);
+    Route::get('/user-missions', [UserMissionsController::class, 'index']);
+    Route::post('/user-missions/start', [UserMissionsController::class, 'start']);
+    Route::patch('/user-missions/{id}/progress', [UserMissionsController::class, 'updateProgress']);
+    Route::patch('/user-missions/{id}/give-up', [UserMissionsController::class, 'giveUp']);
+    Route::post('/user-missions/{id}/claim', [UserMissionsController::class, 'claim']);
 });
