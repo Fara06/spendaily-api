@@ -29,12 +29,19 @@ class CategorySeeder extends Seeder
         ];
 
         foreach ($categories as $category) {
-            DB::table('categories')->insert([
-                ...$category,
-                'user_id'    => null,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            DB::table('categories')->updateOrInsert(
+                [
+                    'name'    => $category['name'],
+                    'type'    => $category['type'],
+                    'user_id' => null,
+                ],
+                [
+                    ...$category,
+                    'user_id'    => null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            );
         }
     }
 }
