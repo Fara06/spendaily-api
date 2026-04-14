@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Mission;
 use App\Models\UserMission;
 
-class MissionsController extends Controller
+class MissionController extends Controller
 {
     public function index(Request $request)
     {

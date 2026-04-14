@@ -5,11 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\UserMission;
-use App\Models\Mission;
+use App\Models\Missions;
 
-class UserMissionsController extends Controller
+class UserMissionController extends Controller
 {
-
     public function index(Request $request)
     {
         $status = $request->query('status');
@@ -65,7 +64,7 @@ class UserMissionsController extends Controller
             ], 400);
         }
 
-        $mission = Mission::findOrFail($request->mission_id);
+        $mission = Missions::findOrFail($request->mission_id);
 
         if ($exists) {
             $exists->update([
@@ -135,6 +134,7 @@ class UserMissionsController extends Controller
             'message' => 'Mission given up',
         ]);
     }
+
     public function claim(Request $request, $id)
     {
         $userMission = UserMission::with('mission')
