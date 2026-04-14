@@ -8,6 +8,7 @@ use App\Http\Controllers\ReminderController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\SavingsTargetController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\InsightController;
 use App\Http\Controllers\MissionController;
 use App\Http\Controllers\UserMissionController;
 
@@ -54,6 +55,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/reminders/{id}', [ReminderController::class, 'update']);
     Route::delete('/reminders/{id}', [ReminderController::class, 'destroy']);
     Route::patch('/reminders/{id}/toggle', [ReminderController::class, 'toggle']);
+
+    // Insights
+    Route::get('/insights/spending-by-category', [InsightController::class, 'spendingByCategory']);
+    Route::get('/insights/spending-by-time', [InsightController::class, 'spendingByTime']);
+    Route::get('/insights/top-spends', [InsightController::class, 'topSpends']);
+    Route::get('/insights/savings-tip', [InsightController::class, 'savingsTip']);
 
     // Missions
     Route::get('/missions', [MissionController::class, 'index']);
