@@ -8,8 +8,8 @@ use App\Http\Controllers\ReminderController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\SavingsTargetController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\Api\MissionController;
-use App\Http\Controllers\Api\UserMissionController;
+use App\Http\Controllers\MissionController;
+use App\Http\Controllers\UserMissionController;
 
 // Public routes
 Route::post('/auth/register', [AuthController::class, 'register']);
