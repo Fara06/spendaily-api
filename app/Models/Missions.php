@@ -22,9 +22,10 @@ class Mission extends Model
     ];
 
     protected $casts = [
-        'is_featured' => 'boolean',
-        'is_flash' => 'boolean',
+        'is_featured'       => 'boolean',
+        'is_flash'          => 'boolean',
         'participants_count' => 'integer',
+        'estimated_saving'  => 'decimal:2',
     ];
 
     public function userMissions()
@@ -44,13 +45,13 @@ class Mission extends Model
 
     public function isActive()
     {
-        return true; 
+        return true;
     }
 
     public function formattedSaving()
     {
         if (!$this->estimated_saving) return null;
 
-        return "Rp " . number_format($this->estimated_saving, 0, ',', '.');
+        return 'Rp ' . number_format($this->estimated_saving, 0, ',', '.');
     }
 }

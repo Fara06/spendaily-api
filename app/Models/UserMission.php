@@ -20,7 +20,7 @@ class UserMission extends Model
 
     protected $casts = [
         'start_date' => 'datetime',
-        'end_date' => 'datetime',
+        'end_date'   => 'datetime',
         'is_claimed' => 'boolean',
     ];
 
@@ -66,7 +66,7 @@ class UserMission extends Model
         }
 
         return min(
-            ($this->progress / $this->mission->target_value) * 100,
+            round(($this->progress / $this->mission->target_value) * 100, 2),
             100
         );
     }

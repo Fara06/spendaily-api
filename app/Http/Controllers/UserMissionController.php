@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\UserMission;
-use App\Models\Missions;
+use App\Models\Mission; // fix: was App\Models\Missions
 
 class UserMissionController extends Controller
 {
@@ -54,20 +54,20 @@ class UserMissionController extends Controller
             'mission_id' => 'required|exists:missions,id',
         ]);
 
-        $exists = UserMission::where('user_id', $request->user()->id)
+        $existing = UserMission::where('user_id', $request->user()->id)
             ->where('mission_id', $request->mission_id)
             ->first();
 
-        if ($exists && $exists->status === 'in_progress') {
+        if ($existing && $existing->status === 'in_progress') {
             return response()->json([
                 'message' => 'Mission already in progress',
             ], 400);
         }
 
-        $mission = Missions::findOrFail($request->mission_id);
+        $mission = Mission::findOrFail($request->mission_id); // fix: was Missions::
 
-        if ($exists) {
-            $exists->update([
+        if ($existing) {
+            $existing->update([
                 'status'     => 'in_progress',
                 'progress'   => 0,
                 'is_claimed' => false,
@@ -77,7 +77,7 @@ class UserMissionController extends Controller
 
             return response()->json([
                 'message' => 'Mission restarted',
-                'data'    => $exists,
+                'data'    => $existing,
             ]);
         }
 

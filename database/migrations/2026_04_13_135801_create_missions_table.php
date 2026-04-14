@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('missions', function (Blueprint $table) {
@@ -19,13 +16,16 @@ return new class extends Migration
             $table->integer('target_value');
             $table->integer('duration');
             $table->integer('reward_points');
+            $table->string('color')->nullable();
+            $table->string('icon')->nullable();
+            $table->boolean('is_featured')->default(false);
+            $table->boolean('is_flash')->default(false);
+            $table->decimal('estimated_saving', 15, 2)->nullable();
+            $table->integer('participants_count')->default(0);
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('missions');

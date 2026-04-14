@@ -13,6 +13,7 @@ class MissionController extends Controller
     {
         $status = $request->query('status');
         $userId = $request->user()->id;
+
         $userMissions = UserMission::where('user_id', $userId)
             ->get()
             ->keyBy('mission_id');
@@ -29,11 +30,15 @@ class MissionController extends Controller
                 'duration'            => $mission->duration,
                 'reward_points'       => $mission->reward_points,
                 'color'               => $mission->color,
+                'icon'                => $mission->icon,
+                'is_featured'         => $mission->is_featured,
+                'is_flash'            => $mission->is_flash,
+                'estimated_saving'    => $mission->estimated_saving,
+                'participants_count'  => $mission->participants_count,
 
                 'progress'            => $userMission->progress ?? 0,
                 'progress_percentage' => $this->calculateProgress($mission, $userMission),
                 'status'              => $userMission->status ?? null,
-
                 'is_claimed'          => $userMission->is_claimed ?? false,
             ];
         });
@@ -92,10 +97,11 @@ class MissionController extends Controller
             ->first();
 
         return response()->json([
-            'mission'      => $mission,
-            'user_mission' => $userMission,
-            'progress'     => $userMission->progress ?? 0,
-            'status'       => $userMission->status ?? null,
+            'mission'             => $mission,
+            'user_mission'        => $userMission,
+            'progress'            => $userMission->progress ?? 0,
+            'progress_percentage' => $this->calculateProgress($mission, $userMission),
+            'status'              => $userMission->status ?? null,
         ]);
     }
 
@@ -105,22 +111,42 @@ class MissionController extends Controller
             'mission_id' => 'required|exists:missions,id',
         ]);
 
-        $exists = UserMission::where('user_id', $request->user()->id)
-            ->where('mission_id', $request->mission_id)
-            ->exists();
+        $userId = $request->user()->id;
 
-        if ($exists) {
+        $existing = UserMission::where('user_id', $userId)
+            ->where('mission_id', $request->mission_id)
+            ->first();
+
+        if ($existing && $existing->status === 'in_progress') {
             return response()->json([
-                'message' => 'Mission already started',
+                'message' => 'Mission already in progress',
             ], 400);
         }
 
+        $mission = Mission::findOrFail($request->mission_id);
+
+        if ($existing) {
+            $existing->update([
+                'status'     => 'in_progress',
+                'progress'   => 0,
+                'is_claimed' => false,
+                'start_date' => now(),
+                'end_date'   => now()->addDays($mission->duration),
+            ]);
+
+            return response()->json([
+                'message'      => 'Mission restarted',
+                'user_mission' => $existing,
+            ]);
+        }
+
         $userMission = UserMission::create([
-            'user_id'    => $request->user()->id,
-            'mission_id' => $request->mission_id,
+            'user_id'    => $userId,
+            'mission_id' => $mission->id,
             'progress'   => 0,
             'status'     => 'in_progress',
             'start_date' => now(),
+            'end_date'   => now()->addDays($mission->duration),
         ]);
 
         return response()->json([
@@ -159,7 +185,7 @@ class MissionController extends Controller
         $request->user()->increment('points', $pointsEarned);
 
         return response()->json([
-            'message'      => 'Reward claimed successfully',
+            'message'       => 'Reward claimed successfully',
             'points_earned' => $pointsEarned,
         ]);
     }
