@@ -9,7 +9,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\SavingsTargetController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MissionsController;
-use App\Http\Controllers\UserMissionsController;
+use App\Http\Controllers\UserMissionController;
 
 // Public routes
 Route::post('/auth/register', [AuthController::class, 'register']);
@@ -67,10 +67,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/missions/give-up', [MissionsController::class, 'giveUp']);
 
     // User Missions — static routes HARUS di atas /{id}
-    Route::get('/user-missions/active', [UserMissionsController::class, 'active']);
-    Route::get('/user-missions', [UserMissionsController::class, 'index']);
-    Route::post('/user-missions/start', [UserMissionsController::class, 'start']);
-    Route::patch('/user-missions/{id}/progress', [UserMissionsController::class, 'updateProgress']);
-    Route::patch('/user-missions/{id}/give-up', [UserMissionsController::class, 'giveUp']);
-    Route::post('/user-missions/{id}/claim', [UserMissionsController::class, 'claim']);
+    Route::get('/user-missions/active', [UserMissionController::class, 'active']);
+    Route::get('/user-missions', [UserMissionController::class, 'index']);
+    Route::post('/user-missions/start', [UserMissionController::class, 'start']);
+    Route::patch('/user-missions/{id}/progress', [UserMissionController::class, 'updateProgress']);
+    Route::patch('/user-missions/{id}/give-up', [UserMissionController::class, 'giveUp']);
+    Route::post('/user-missions/{id}/claim', [UserMissionController::class, 'claim']);
 });
