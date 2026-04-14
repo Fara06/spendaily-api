@@ -10,10 +10,12 @@ class SavingsTargetController extends Controller
     public function index(Request $request)
     {
         $targets = SavingsTarget::where('user_id', $request->user()->id)->get();
+
         $targets->map(function ($item) {
             $item->progress = $item->target_amount > 0
                 ? ($item->current_amount / $item->target_amount) * 100
                 : 0;
+
             return $item;
         });
 
@@ -45,15 +47,16 @@ class SavingsTargetController extends Controller
             'end_date'      => 'required|date|after:start_date',
         ]);
 
+        // nonaktifkan target lama
         SavingsTarget::where('user_id', $request->user()->id)
             ->update(['is_active' => false]);
 
-        $target = SavingsTarget::create([
-            ...$validated,
+        // CREATE (FIXED)
+        $target = SavingsTarget::create(array_merge($validated, [
             'user_id' => $request->user()->id,
             'current_amount' => 0,
             'is_active' => true,
-        ]);
+        ]));
 
         return response()->json($target, 201);
     }
@@ -73,6 +76,7 @@ class SavingsTargetController extends Controller
             'is_active'     => 'sometimes|boolean',
         ]);
 
+        // kalau diaktifkan, matikan target lain
         if (isset($validated['is_active']) && $validated['is_active']) {
             SavingsTarget::where('user_id', $request->user()->id)
                 ->update(['is_active' => false]);
@@ -91,7 +95,9 @@ class SavingsTargetController extends Controller
 
         $target->delete();
 
-        return response()->json(['message' => 'Savings target deleted']);
+        return response()->json([
+            'message' => 'Savings target deleted'
+        ]);
     }
 
     public function addProgress(Request $request, $id)
